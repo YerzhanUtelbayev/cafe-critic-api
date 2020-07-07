@@ -3,12 +3,14 @@ import path from 'path'
 import express from 'express'
 import bodyParser from 'body-parser'
 
+import Controller from './interfaces/controller.interface'
+
 class App {
   private readonly app: express.Application;
   private readonly port: string | number;
-  private controllers: any[];
+  private controllers: Controller[];
 
-  constructor (controllers: any[], port: string | number) {
+  constructor (controllers: Controller[], port: string | number) {
     this.app = express()
     this.port = port
     this.controllers = controllers
