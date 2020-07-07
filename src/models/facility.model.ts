@@ -1,5 +1,7 @@
 import mongoose from 'mongoose'
 
+import Facility from '../interfaces/facility.interface'
+
 const { Schema } = mongoose
 
 const RatingsSchema = new Schema({
@@ -30,6 +32,6 @@ const FacilitySchema = new Schema({
   ratings: RatingsSchema
 })
 
-const Facility = mongoose.model('Facility', FacilitySchema)
+const facilityModel = mongoose.model<Facility & mongoose.Document>('Facility', FacilitySchema)
 
-export default Facility
+export default facilityModel
