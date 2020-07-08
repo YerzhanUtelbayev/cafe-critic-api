@@ -6,6 +6,7 @@ import validationMiddleware from '../../middleware/validation.middleware'
 import CreateFacilityDto from './facility.dto'
 // import Facility from '../../interfaces/facility.interface'
 import facilityModel from '../../models/facility.model'
+import RequestWithUser from '../../interfaces/RequestWithUser.interface'
 
 class FacilityController implements Controller {
   public path = '/places';
@@ -22,7 +23,7 @@ class FacilityController implements Controller {
     this.router.post(this.path, authMiddleware, validationMiddleware(CreateFacilityDto), this.create)
   }
 
-  private create = async (request: Request, response: Response): Promise<Response> => {
+  private create = async (request: RequestWithUser, response: Response): Promise<Response> => {
     const facilityData: CreateFacilityDto = request.body
     if (request.user) {
       const createdFacility = new this.FacilityModel({
