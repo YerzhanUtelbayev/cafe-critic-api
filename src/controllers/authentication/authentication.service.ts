@@ -1,4 +1,3 @@
-import * as bcrypt from 'bcrypt'
 import * as jwt from 'jsonwebtoken'
 
 import DataStoredInToken from '../../interfaces/dataStoredInToken.interface'
@@ -10,18 +9,12 @@ import UserWithThatEmailAlreadyExistsException from '../../exceptions/UserWithTh
 
 class AuthenticationService {
   public UserModel = userModel;
-  private SALT_WORK_FACTOR = 10;
 
   public async register (userData: CreateUserDto):Promise {
     if (await this.UserModel.findOne({ email: userData.email })) {
       throw new UserWithThatEmailAlreadyExistsException(userData.email)
     }
-    const salt = await bcrypt.genSalt(this.SALT_WORK_FACTOR)
-    const hashedPassword = await bcrypt.hash(userData.password, salt)
-    const user = await this.UserModel.create({
-      ...userData,
-      password: hashedPassword
-    })
+    const user = await this.UserModel.create(userData)
     const tokenData = this.createToken(user._id)
     const cookie = this.createCookie(tokenData)
     return {

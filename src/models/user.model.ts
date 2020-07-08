@@ -1,7 +1,9 @@
 import mongoose from 'mongoose'
+import * as bcrypt from 'bcrypt'
 
 import User from '../interfaces/user.interface'
 
+const SALT_WORK_FACTOR = 10
 const { Schema } = mongoose
 
 const addressSchema = new Schema({
@@ -40,6 +42,27 @@ const userSchema = new Schema(
     }
   }
 )
+
+userSchema.pre('save', async function encryptIntoHash (next) {
+  if (!this.isModified('password')) return next()
+
+  const plainPassword = this.get('password')
+  const salt = await bcrypt.genSalt(SALT_WORK_FACTOR)
+  const hash = await bcrypt.hash(plainPassword, salt)
+  this.set('password', hash)
+  return next()
+})
+
+userSchema.set('toJSON', {
+  transform: (doc, ret) => {
+    delete ret.password
+    return ret
+  }
+})
+
+userSchema.methods.checkPassword = function checkPassword (password: string) {
+  return bcrypt.compare(password, this.password)
+}
 
 userSchema.virtual('fullName').get(function (this: User): string {
   return `${this.firstName} ${this.lastName}`
