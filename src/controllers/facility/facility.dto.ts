@@ -1,10 +1,10 @@
 import { IsString } from 'class-validator'
 
-import Facility from '../interfaces/facility.interface'
+import Facility from '../../interfaces/facility.interface'
 
 class CreateFacilityDto implements Facility {
   @IsString()
-  public owner: string;
+  public owner?: string;
 
   @IsString()
   public title: string;

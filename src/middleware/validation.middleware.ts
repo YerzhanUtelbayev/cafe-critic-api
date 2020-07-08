@@ -5,7 +5,7 @@ import { RequestHandler } from 'express'
 import HttpException from '../exceptions/HttpExceptions'
 
 function validationMiddleware<T> (
-  type: never,
+  type: any,
   skipMissingProperties = false
 ): RequestHandler {
   return (request, response, next) => {
