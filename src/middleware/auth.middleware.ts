@@ -1,14 +1,13 @@
-import { Response, NextFunction } from 'express'
+import { Request, Response, NextFunction } from 'express'
 import jwt from 'jsonwebtoken'
 
 import AuthenticationTokenMissingException from '../exceptions/AuthenticationTokenMissingException'
 import WrongAuthenticationTokenException from '../exceptions/WrongAuthenticationTokenException'
 import DataStoredInToken from '../interfaces/dataStoredInToken.interface'
-import RequestWithUser from '../interfaces/requestWithUser.interface'
 import userModel from '../models/user.model'
 
 async function authMiddleware (
-  request: RequestWithUser,
+  request: Request,
   response: Response,
   next: NextFunction
 ): Promise<void> {
