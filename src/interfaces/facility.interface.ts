@@ -1,5 +1,5 @@
 export default interface Facility {
-  _id: string;
+  _id?: string;
   owner: string;
   title: string;
   description: string;
