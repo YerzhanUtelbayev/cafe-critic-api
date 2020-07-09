@@ -57,9 +57,9 @@ class ImageController implements Controller {
       return next(new PlaceQueryMissingException())
     }
     const facilityId = request.query.place
-    this.ImageModel.find({ facility: facilityId })
+    const imageDocs = this.ImageModel.find({ facility: facilityId })
 
-    return response.send()
+    return response.send(imageDocs)
   };
 }
 
