@@ -4,9 +4,9 @@ export default interface Facility {
   title: string;
   description: string;
   promoImage: string;
-  ratingsNumber?: number;
+  reviewsNumber?: number;
   ratings?: {
-    overaLL: number,
+    overall: number,
     food: number,
     service: number,
     interior: number,

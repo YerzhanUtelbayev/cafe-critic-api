@@ -29,10 +29,13 @@ const FacilitySchema = new Schema({
     type: String,
     required: true
   },
-  ratingsNumber: Number,
+  reviewsNumber: { type: Number, default: 0 },
   ratings: RatingsSchema
 })
 
-const facilityModel = mongoose.model<Facility & mongoose.Document>('Facility', FacilitySchema)
+const facilityModel = mongoose.model<Facility & mongoose.Document>(
+  'Facility',
+  FacilitySchema
+)
 
 export default facilityModel
