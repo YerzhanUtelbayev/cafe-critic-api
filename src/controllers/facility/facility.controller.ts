@@ -71,14 +71,14 @@ class FacilityController implements Controller {
     request: RequestWithUser,
     response: Response,
     next: NextFunction
-  ) => {
+  ): Promise<Response | void> => {
     const { id } = request.params
     const facilityData: Facility = request.body
     const facilityDoc = this.FacilityModel.findByIdAndUpdate(id, facilityData, {
       new: true
     })
     if (facilityDoc) {
-      response.send(facilityDoc)
+      return response.send(facilityDoc)
     } else {
       next(new FacilityNotFoundException(id))
     }
