@@ -11,6 +11,7 @@ import validationMiddleware from '../../middleware/validation.middleware'
 import AuthenticationTokenMissingException from '../../exceptions/AuthenticationTokenMissingException'
 import PlaceQueryMissingException from '../../exceptions/PlaceQueryMissingException'
 import HttpExceptions from '../../exceptions/HttpExceptions'
+import ReviewNotFoundException from '../../exceptions/ReviewNotFoundException'
 
 class ReviewController implements Controller {
   public path = '/reviews';
@@ -29,6 +30,7 @@ class ReviewController implements Controller {
       [authMiddleware, validationMiddleware(CreateReviewDto)],
       this.create
     )
+    this.router.delete(`${this.path}/:id`, authMiddleware, this.remove)
   }
 
   private create = async (
@@ -71,6 +73,21 @@ class ReviewController implements Controller {
     const facilityId = request.query.place
     const reviewDocs = await this.ReviewModel.find({ facility: facilityId })
     return response.send(reviewDocs)
+  };
+
+  private remove = async (
+    request: RequestWithUser,
+    response: Response,
+    next: NextFunction
+  ): Promise<Response | void> => {
+    const { id } = request.params
+    const successResponse = await this.ReviewModel.findByIdAndDelete(id)
+    if (successResponse) {
+      return response.send(200)
+    } else {
+      next(new ReviewNotFoundException(id))
+    }
+    return response.send()
   };
 }
 
