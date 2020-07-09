@@ -29,6 +29,10 @@ class AuthenticationController implements Controller {
       validationMiddleware(LoginDto),
       this.signIn
     )
+    this.router.post(
+      `${this.path}/logout`,
+      this.signOut
+    )
   }
 
   private registration = async (
@@ -42,9 +46,9 @@ class AuthenticationController implements Controller {
         userData
       )
       response.setHeader('Set-Cookie', [cookie])
-      response.send(user)
+      return response.send(user)
     } catch (error) {
-      next(error)
+      return next(error)
     }
   };
 
@@ -69,6 +73,11 @@ class AuthenticationController implements Controller {
     response.setHeader('Set-Cookie', [cookie])
     return response.send(user)
   };
+
+  private signOut = (request:Request, response:Response):Response => {
+    response.setHeader('Set-Cookie', ['Authorization=;Max-age=0'])
+    return response.sendStatus(200)
+  }
 }
 
 export default AuthenticationController
