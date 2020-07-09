@@ -10,10 +10,7 @@ class CreateImageDto implements Image {
   image: string
 
   constructor (
-    image: Image = {
-      facility: '',
-      image: ''
-    }
+    image: Image
   ) {
     this.facility = image.facility
     this.image = image.image

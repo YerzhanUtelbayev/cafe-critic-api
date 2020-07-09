@@ -27,19 +27,7 @@ class CreateUserDto {
   public address?: CreateAddressDto;
 
   constructor (
-    user: User = {
-      firstName: '',
-      lastName: '',
-      email: '',
-      password: '',
-      avatarImage: '',
-      role: '',
-      address: {
-        street: '',
-        city: '',
-        country: ''
-      }
-    }
+    user: User
   ) {
     this.firstName = user.firstName
     this.lastName = user.lastName
