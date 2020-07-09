@@ -41,7 +41,7 @@ class ReviewService {
     }
   }
 
-  public updateFacilityAverageRatingWithNew = async (
+  public hasUpdatedFacilityAverageRatingWithNew = async (
     facilityId: string,
     ratings: IRating
   ): Promise<boolean> => {
