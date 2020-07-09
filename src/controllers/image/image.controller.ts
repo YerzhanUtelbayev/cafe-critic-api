@@ -3,11 +3,11 @@ import { isString } from 'class-validator'
 
 import Controller from '../../interfaces/controller.interface'
 import imageModel from '../../models/image.model'
-import PlaceQueryMissingException from '../../exceptions/PlaceQueryMissingException'
 import RequestWithUser from '../../interfaces/RequestWithUser.interface'
 import CreateImageDto from './image.dto'
 import authMiddleware from '../../middleware/auth.middleware'
 import validationMiddleware from '../../middleware/validation.middleware'
+import PlaceQueryMissingException from '../../exceptions/PlaceQueryMissingException'
 import AuthenticationTokenMissingException from '../../exceptions/AuthenticationTokenMissingException'
 
 class ImageController implements Controller {
