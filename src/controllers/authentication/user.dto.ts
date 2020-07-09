@@ -1,4 +1,4 @@
-import { IsOptional, IsString, ValidateNested } from 'class-validator'
+import { IsOptional, IsString, IsEmail, ValidateNested } from 'class-validator'
 
 import CreateAddressDto from './address.dto'
 import User from '../../interfaces/user.interface'
@@ -10,7 +10,7 @@ class CreateUserDto {
   @IsString()
   public lastName: string;
 
-  @IsString()
+  @IsEmail()
   public email: string;
 
   @IsString()
