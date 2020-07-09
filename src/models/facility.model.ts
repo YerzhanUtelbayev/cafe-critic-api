@@ -29,6 +29,7 @@ const FacilitySchema = new Schema({
     type: String,
     required: true
   },
+  ratingsNumber: Number,
   ratings: RatingsSchema
 })
 
