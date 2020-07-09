@@ -1,8 +1,8 @@
-import HttpException from './HttpExceptions'
+import HttpExceptions from './HttpExceptions'
 
-class FacilityNotFoundException extends HttpException {
+class FacilityNotFoundException extends HttpExceptions {
   constructor (id: string) {
-    super(404, `Post with id ${id} not found`)
+    super(404, `Place with id ${id} not found`)
   }
 }
 
