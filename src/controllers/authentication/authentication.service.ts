@@ -7,10 +7,15 @@ import userModel from '../../models/user.model'
 import CreateUserDto from './user.dto'
 import UserWithThatEmailAlreadyExistsException from '../../exceptions/UserWithThatEmailExistsException'
 
+interface IRegisterData {
+  cookie: string
+  user: User
+}
+
 class AuthenticationService {
   public UserModel = userModel;
 
-  public async register (userData: CreateUserDto):Promise {
+  public async register (userData: CreateUserDto):Promise<IRegisterData> {
     if (await this.UserModel.findOne({ email: userData.email })) {
       throw new UserWithThatEmailAlreadyExistsException(userData.email)
     }

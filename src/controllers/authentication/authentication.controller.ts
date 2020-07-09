@@ -75,6 +75,7 @@ class AuthenticationController implements Controller {
   };
 
   private signOut = (request:Request, response:Response):Response => {
+    // TODO: Add User stored token refreshing
     response.setHeader('Set-Cookie', ['Authorization=;Max-age=0'])
     return response.sendStatus(200)
   }
