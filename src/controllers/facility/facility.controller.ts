@@ -8,6 +8,7 @@ import validationMiddleware from '../../middleware/validation.middleware'
 import CreateFacilityDto from './facility.dto'
 import facilityModel from '../../models/facility.model'
 import FacilityNotFoundException from '../../exceptions/FacilityNotFoundException'
+import AuthenticationTokenMissingException from '../../exceptions/AuthenticationTokenMissingException'
 
 class FacilityController implements Controller {
   public path = '/places';
@@ -23,30 +24,30 @@ class FacilityController implements Controller {
     this.router.get(`${this.path}/:id`, this.getById)
     this.router.post(
       this.path,
-      authMiddleware,
-      validationMiddleware(CreateFacilityDto),
+      [authMiddleware, validationMiddleware(CreateFacilityDto)],
       this.create
     )
     this.router.patch(
       `${this.path}/:id`,
-      authMiddleware,
-      validationMiddleware(CreateFacilityDto, true),
+      [authMiddleware, validationMiddleware(CreateFacilityDto, true)],
       this.update
     )
   }
 
   private create = async (
     request: RequestWithUser,
-    response: Response
-  ): Promise<Response> => {
+    response: Response,
+    next: NextFunction
+  ): Promise<Response | void> => {
     const facilityData: CreateFacilityDto = request.body
-    if (request.user) {
-      const createdFacility = new this.FacilityModel({
-        ...facilityData,
-        owner: request.user._id
-      })
-      await createdFacility.save()
+    if (!request.user) {
+      return next(new AuthenticationTokenMissingException())
     }
+    const createdFacility = new this.FacilityModel({
+      ...facilityData,
+      owner: request.user._id
+    })
+    await createdFacility.save()
     return response.sendStatus(201)
   };
 

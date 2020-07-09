@@ -4,6 +4,11 @@ import { isString } from 'class-validator'
 import Controller from '../../interfaces/controller.interface'
 import imageModel from '../../models/image.model'
 import PlaceQueryMissingException from '../../exceptions/PlaceQueryMissingException'
+import RequestWithUser from '../../interfaces/RequestWithUser.interface'
+import CreateImageDto from './image.dto'
+import authMiddleware from '../../middleware/auth.middleware'
+import validationMiddleware from '../../middleware/validation.middleware'
+import AuthenticationTokenMissingException from '../../exceptions/AuthenticationTokenMissingException'
 
 class ImageController implements Controller {
   public path = '/places';
@@ -16,7 +21,29 @@ class ImageController implements Controller {
 
   private initializeRoutes (): void {
     this.router.get(this.path, this.getByFacility)
+    this.router.post(
+      this.path,
+      [authMiddleware, validationMiddleware(CreateImageDto)],
+      this.create
+    )
   }
+
+  private create = async (
+    request: RequestWithUser,
+    response: Response,
+    next: NextFunction
+  ): Promise<Response | void> => {
+    const imageData: CreateImageDto = request.body
+    if (!request.user) {
+      return next(new AuthenticationTokenMissingException())
+    }
+    const createdImage = new this.ImageModel({
+      ...imageData,
+      author: request.user._id
+    })
+    await createdImage.save()
+    return response.sendStatus(201)
+  };
 
   private getByFacility = async (
     request: Request,
