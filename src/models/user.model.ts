@@ -6,6 +6,10 @@ import User from '../interfaces/user.interface'
 const SALT_WORK_FACTOR = 10
 const { Schema } = mongoose
 
+export interface IUserDocument extends mongoose.Document {
+  checkPassword(password: string): Promise<boolean>;
+}
+
 const addressSchema = new Schema({
   city: String,
   country: String,
@@ -60,14 +64,16 @@ userSchema.set('toJSON', {
   }
 })
 
-userSchema.methods.checkPassword = function checkPassword (password: string) {
-  return bcrypt.compare(password, this.password)
+userSchema.methods.checkPassword = async function checkPassword (
+  password: string
+): Promise<boolean> {
+  return await bcrypt.compare(password, this.password)
 }
 
 userSchema.virtual('fullName').get(function (this: User): string {
   return `${this.firstName} ${this.lastName}`
 })
 
-const userModel = mongoose.model<User & mongoose.Document>('User', userSchema)
+const userModel = mongoose.model<User & IUserDocument>('User', userSchema)
 
 export default userModel
