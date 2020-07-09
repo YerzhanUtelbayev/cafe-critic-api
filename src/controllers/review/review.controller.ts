@@ -1,12 +1,14 @@
-import { Router, Response, NextFunction } from 'express'
+import { Router, Request, Response, NextFunction } from 'express'
+import { isString } from 'class-validator'
 
 import Controller from '../../interfaces/controller.interface'
 import CreateReviewDto from './review.dto'
 import RequestWithUser from '../../interfaces/RequestWithUser.interface'
 import reviewModel from '../../models/review.model'
-import AuthenticationTokenMissingException from '../../exceptions/AuthenticationTokenMissingException'
 import authMiddleware from '../../middleware/auth.middleware'
 import validationMiddleware from '../../middleware/validation.middleware'
+import AuthenticationTokenMissingException from '../../exceptions/AuthenticationTokenMissingException'
+import PlaceQueryMissingException from '../../exceptions/PlaceQueryMissingException'
 
 class ReviewController implements Controller {
   public path = '/reviews';
@@ -18,6 +20,7 @@ class ReviewController implements Controller {
   }
 
   private initializeRoutes (): void {
+    this.router.get(this.path, this.getByFacility)
     this.router.post(
       this.path,
       [authMiddleware, validationMiddleware(CreateReviewDto)],
@@ -40,6 +43,22 @@ class ReviewController implements Controller {
     })
     await createdReview.save()
     return response.sendStatus(201)
+  };
+
+  private getByFacility = async (
+    request: Request,
+    response: Response,
+    next: NextFunction
+  ): Promise<Response | void> => {
+    if (
+      !(request.query && request.query.place) ||
+      !isString(request.query.place)
+    ) {
+      return next(new PlaceQueryMissingException())
+    }
+    const facilityId = request.query.place
+    const reviewDocs = await this.ReviewModel.find({ facility: facilityId })
+    return response.send(reviewDocs)
   };
 }
 
