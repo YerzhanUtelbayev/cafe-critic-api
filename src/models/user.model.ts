@@ -19,8 +19,7 @@ const addressSchema = new Schema({
 const userSchema = new Schema(
   {
     address: addressSchema,
-    email: String,
-    username: {
+    email: {
       type: String,
       required: true,
       unique: true

@@ -34,7 +34,7 @@ class App {
     )
   }
 
-  private initializeErrorHandling ():void {
+  private initializeErrorHandling (): void {
     this.app.use(errorMiddleware)
   }
 
@@ -54,13 +54,20 @@ class App {
     return this.app
   }
 
+  private getDbPath (): string {
+    return 'mongodb://localhost:27017'
+  }
+
   private connectToTheDatabase (): void {
-    const {
-      MONGO_USER,
-      MONGO_PASSWORD,
-      MONGO_PATH
-    } = process.env
-    mongoose.connect(`mongodb://${MONGO_USER}:${MONGO_PASSWORD}${MONGO_PATH}`)
+    mongoose
+      .connect(this.getDbPath(), {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        useFindAndModify: false,
+        useCreateIndex: true
+      })
+      .then(() => console.log('Mongoose connected'))
+      .catch(console.log)
   }
 }
 
