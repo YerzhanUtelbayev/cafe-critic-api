@@ -48,7 +48,7 @@ class ReviewController implements Controller {
       author: request.user._id
     })
 
-    const isRatingUpdated = await this.ReviewService.hasUpdatedFacilityAverageRatingWithNew(
+    const isRatingUpdated = await this.ReviewService.hasUpdatedFacilityRatingWithNew(
       reviewData
     )
     if (!isRatingUpdated) {
@@ -81,13 +81,20 @@ class ReviewController implements Controller {
     next: NextFunction
   ): Promise<Response | void> => {
     const { id } = request.params
-    const successResponse = await this.ReviewModel.findByIdAndDelete(id)
-    if (successResponse) {
-      return response.send(200)
-    } else {
-      next(new ReviewNotFoundException(id))
+    const reviewDoc = await this.ReviewModel.findById(id)
+    if (!reviewDoc) {
+      return next(new ReviewNotFoundException(id))
     }
-    return response.send()
+
+    const isRatingUpdated = await this.ReviewService.hasUpdatedFacilityRatingWithDeleted(
+      reviewDoc
+    )
+    if (!isRatingUpdated) {
+      return next(new HttpExceptions())
+    }
+
+    await reviewDoc.deleteOne()
+    return response.send(200)
   };
 }
 
