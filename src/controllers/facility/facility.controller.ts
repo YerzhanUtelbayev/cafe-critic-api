@@ -3,10 +3,11 @@ import { Request, Response, Router, NextFunction } from 'express'
 import Controller from '../../interfaces/controller.interface'
 import Facility from '../../interfaces/facility.interface'
 import RequestWithUser from '../../interfaces/RequestWithUser.interface'
-import authMiddleware from '../../middleware/auth.middleware'
-import validationMiddleware from '../../middleware/validation.middleware'
 import CreateFacilityDto from './facility.dto'
 import facilityModel from '../../models/facility.model'
+import authMiddleware from '../../middleware/auth.middleware'
+import validationMiddleware from '../../middleware/validation.middleware'
+import upload from '../../middleware/multerStorage.middleware'
 import FacilityNotFoundException from '../../exceptions/FacilityNotFoundException'
 import AuthenticationTokenMissingException from '../../exceptions/AuthenticationTokenMissingException'
 
@@ -24,12 +25,20 @@ class FacilityController implements Controller {
     this.router.get(`${this.path}/:id`, this.getById)
     this.router.post(
       this.path,
-      [authMiddleware, validationMiddleware(CreateFacilityDto)],
+      [
+        authMiddleware,
+        validationMiddleware(CreateFacilityDto),
+        upload.single('promoImage')
+      ],
       this.create
     )
     this.router.patch(
       `${this.path}/:id`,
-      [authMiddleware, validationMiddleware(CreateFacilityDto, true)],
+      [
+        authMiddleware,
+        validationMiddleware(CreateFacilityDto, true),
+        upload.single('promoImage')
+      ],
       this.update
     )
   }

@@ -7,6 +7,7 @@ import RequestWithUser from '../../interfaces/RequestWithUser.interface'
 import CreateImageDto from './image.dto'
 import authMiddleware from '../../middleware/auth.middleware'
 import validationMiddleware from '../../middleware/validation.middleware'
+import upload from '../../middleware/multerStorage.middleware'
 import PlaceQueryMissingException from '../../exceptions/PlaceQueryMissingException'
 import AuthenticationTokenMissingException from '../../exceptions/AuthenticationTokenMissingException'
 
@@ -23,7 +24,11 @@ class ImageController implements Controller {
     this.router.get(this.path, this.getByFacility)
     this.router.post(
       this.path,
-      [authMiddleware, validationMiddleware(CreateImageDto)],
+      [
+        authMiddleware,
+        validationMiddleware(CreateImageDto),
+        upload.single('image')
+      ],
       this.create
     )
   }
