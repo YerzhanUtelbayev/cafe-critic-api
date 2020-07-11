@@ -1,6 +1,7 @@
 node_modules/
 build/
 public/
+fixtures/
 /.git
 /.vscode
 /.idea

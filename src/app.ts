@@ -55,7 +55,7 @@ class App {
   }
 
   private getDbPath (): string {
-    return 'mongodb://localhost:27017'
+    return 'mongodb://localhost:27017/cafedb'
   }
 
   private connectToTheDatabase (): void {
