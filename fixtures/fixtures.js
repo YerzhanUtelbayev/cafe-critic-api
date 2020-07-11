@@ -1,16 +1,29 @@
-const Fixtures = require('node-mongodb-fixtures')
+const imageFileNames = require('./helpers/imageFilenames.json');
+const createUsersByNumber = require('./helpers/users');
+const createFacilities = require('./helpers/facilities');
+const createFacilityImages = require('./helpers/images');
+const createFacilityReviews = require('./helpers/reviews');
 
-const uri = 'mongodb://localhost:27017/cafedb'
+const USERS_NUMBER = 3;
+const FACILITY_IMAGES_MAX_NUMBER = 20;
+const FACILITY_REVIEWS_MAX_NUMBER = 5;
 
-const fixtures = new Fixtures({
-  dir: 'fixtures/mockData',
-  mute: false,
-  filter: 'users.*'
-})
-
-fixtures
-  .connect(uri, { useUnifiedTopology: true })
-  .then(() => fixtures.unload())
-  .then(() => fixtures.load())
-  .catch((error) => console.log(error))
-  .finally(() => fixtures.disconnect)
+const usersList = createUsersByNumber(USERS_NUMBER);
+const facilitiesList = createFacilities(usersList, imageFileNames.exterior);
+const imagesList = facilitiesList.reduce((acc, { _id }) => {
+  return [
+    ...acc,
+    ...createFacilityImages(
+      _id,
+      usersList,
+      imageFileNames.interior,
+      FACILITY_IMAGES_MAX_NUMBER
+    )
+  ];
+}, []);
+const reviewsList = facilitiesList.reduce((acc, { _id }) => {
+  return [
+    ...acc,
+    ...createFacilityReviews(_id, usersList, FACILITY_REVIEWS_MAX_NUMBER)
+  ];
+}, []);

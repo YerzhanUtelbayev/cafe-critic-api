@@ -7,8 +7,8 @@ const syncGetPassword = (plainPassword) => {
   return bcrypt.hashSync(plainPassword, salt);
 };
 
-module.exports = [
-  {
+const createUser = () => {
+  return {
     _id: ObjectID(),
     address: faker.address.streetAddress(),
     email: faker.internet.email(),
@@ -17,5 +17,20 @@ module.exports = [
     password: syncGetPassword('user'),
     avatarImage: faker.image.avatar(),
     role: 'user'
+  };
+};
+
+const createUsersByNumber = (usersNumber) => {
+  if (usersNumber > 0) {
+    const usersList = [];
+    for (let i = 0; i < usersNumber; i++) {
+      const user = createUser();
+      usersList.push(user);
+    }
+    return usersList;
+  } else {
+    return [];
   }
-];
+};
+
+module.exports = createUsersByNumber;
