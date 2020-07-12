@@ -10,7 +10,7 @@
     "start:dev": "nodemon",
     "lint": "eslint . --ext .ts,.js",
     "prettier-format": "prettier --config .prettierrc 'src/**/*(.ts,.js)' --write",
-    "fixtures": "node fixtures/fixtures.js"
+    "fixtures": "node build/fixtures/fixtures.js"
   },
   "husky": {
     "hooks": {
