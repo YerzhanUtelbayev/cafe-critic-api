@@ -1,5 +1,7 @@
+import { ObjectId } from 'mongodb'
+
 export default interface User {
-  _id?: string;
+  _id?: string | ObjectId;
   firstName: string;
   lastName: string;
   fullName?: string;

@@ -1,10 +1,11 @@
 import { IsString } from 'class-validator'
+import { ObjectId } from 'mongodb'
 
 import Facility from '../../interfaces/facility.interface'
 
 class CreateFacilityDto implements Facility {
   @IsString()
-  public owner?: string;
+  public owner?: string | ObjectId;
 
   @IsString()
   public title: string;
@@ -15,14 +16,7 @@ class CreateFacilityDto implements Facility {
   @IsString()
   public promoImage: string;
 
-  constructor (
-    facility: Facility = {
-      owner: '',
-      title: '',
-      description: '',
-      promoImage: ''
-    }
-  ) {
+  constructor (facility: Facility) {
     this.owner = facility.owner
     this.title = facility.title
     this.description = facility.description

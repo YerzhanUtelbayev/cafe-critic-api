@@ -1,10 +1,11 @@
 import { IsString, IsInt, Min, Max } from 'class-validator'
+import { ObjectId } from 'mongodb'
 
 import Review from '../../interfaces/review.interface'
 
 class CreateReviewDto implements Review {
   @IsString()
-  public facility: string
+  public facility: string | ObjectId
 
   @IsString()
   public description: string

@@ -1,16 +1,20 @@
-const faker = require('faker');
-const { ObjectID } = require('mongodb');
-const bcrypt = require('bcrypt');
+import faker from 'faker';
+import { ObjectID } from 'mongodb';
+import bcrypt from 'bcrypt';
 
-const syncGetPassword = (plainPassword) => {
+const syncGetPassword = (plainPassword: string) => {
   const salt = bcrypt.genSaltSync(10);
   return bcrypt.hashSync(plainPassword, salt);
 };
 
 const createUser = () => {
   return {
-    _id: ObjectID(),
-    address: faker.address.streetAddress(),
+    _id: new ObjectID(),
+    address: {
+      city: faker.address.city(),
+      country: faker.address.country(),
+      street: faker.address.streetAddress(),
+    },
     email: faker.internet.email(),
     firstName: faker.name.firstName(),
     lastName: faker.name.lastName(),
@@ -20,7 +24,7 @@ const createUser = () => {
   };
 };
 
-const createUsersByNumber = (usersNumber) => {
+const createUsersByNumber = (usersNumber: number) => {
   if (usersNumber > 0) {
     const usersList = [];
     for (let i = 0; i < usersNumber; i++) {
@@ -33,4 +37,4 @@ const createUsersByNumber = (usersNumber) => {
   }
 };
 
-module.exports = createUsersByNumber;
+export default createUsersByNumber;

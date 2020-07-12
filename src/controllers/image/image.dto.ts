@@ -1,10 +1,11 @@
 import { IsString } from 'class-validator'
+import { ObjectId } from 'mongodb'
 
 import Image from '../../interfaces/image.interface'
 
 class CreateImageDto implements Image {
   @IsString()
-  facility: string
+  facility: string | ObjectId
 
   @IsString()
   image: string
