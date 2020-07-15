@@ -5,6 +5,7 @@ import AuthenticationService from './authentication.service'
 import CreateUserDto from './user.dto'
 import userModel from '../../models/user.model'
 import validationMiddleware from '../../middleware/validation.middleware'
+import upload from '../../middleware/multerStorage.middleware'
 import LoginDto from './loginDto'
 import WrongCredentialsException from '../../exceptions/WrongCredentialsException'
 
@@ -21,7 +22,7 @@ class AuthenticationController implements Controller {
   private initializeRoutes () {
     this.router.post(
       `${this.path}/register`,
-      validationMiddleware(CreateUserDto),
+      upload.single('avatarImage'),
       this.registration
     )
     this.router.post(
@@ -29,10 +30,7 @@ class AuthenticationController implements Controller {
       validationMiddleware(LoginDto),
       this.signIn
     )
-    this.router.post(
-      `${this.path}/logout`,
-      this.signOut
-    )
+    this.router.post(`${this.path}/logout`, this.signOut)
   }
 
   private registration = async (
@@ -40,7 +38,16 @@ class AuthenticationController implements Controller {
     response: Response,
     next: NextFunction
   ) => {
-    const userData: CreateUserDto = request.body
+    const { body } = request
+    if (request.file && request.file.filename) {
+      body.avatarImage = request.file.filename
+      body.address = {
+        city: body.city || '',
+        street: body.street || '',
+        country: body.country || ''
+      }
+    }
+    const userData: CreateUserDto = body
     try {
       const { cookie, user } = await this.AuthenticationService.register(
         userData
@@ -74,11 +81,11 @@ class AuthenticationController implements Controller {
     return response.send(user)
   };
 
-  private signOut = (request:Request, response:Response):Response => {
+  private signOut = (request: Request, response: Response): Response => {
     // TODO: Add User stored token refreshing
     response.setHeader('Set-Cookie', ['Authorization=;Max-age=0'])
     return response.sendStatus(200)
-  }
+  };
 }
 
 export default AuthenticationController
