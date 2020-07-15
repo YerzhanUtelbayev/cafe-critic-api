@@ -26,8 +26,8 @@ class ImageController implements Controller {
       this.path,
       [
         authMiddleware,
-        validationMiddleware(CreateImageDto),
-        upload.single('image')
+        upload.single('image'),
+        validationMiddleware(CreateImageDto)
       ],
       this.create
     )
