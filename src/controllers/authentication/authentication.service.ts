@@ -2,7 +2,6 @@ import * as jwt from 'jsonwebtoken'
 
 import DataStoredInToken from '../../interfaces/dataStoredInToken.interface'
 import TokenData from '../../interfaces/tokenData.interface'
-import User from '../../interfaces/user.interface'
 import userModel from '../../models/user.model'
 import CreateUserDto from './user.dto'
 import UserWithThatEmailAlreadyExistsException from '../../exceptions/UserWithThatEmailExistsException'
