@@ -13,11 +13,13 @@ async function authMiddleware (
   response: Response,
   next: NextFunction
 ): Promise<void> {
-  const { cookies } = request.cookies
-  if (cookies && cookies.Authorization && process.env.JWT_SECRET) {
+  const headerToken = request.get('authorization')
+  if (headerToken && process.env.JWT_SECRET) {
     // TODO: add exception for undefined process.env.JWT_SECRET
     const secret = process.env.JWT_SECRET
-    const token = cookies.Authorization
+    const token = headerToken.startsWith('Bearer ')
+      ? headerToken.slice(7, headerToken.length)
+      : headerToken
     try {
       const verificationResponse = (await jwt.verify(
         token,

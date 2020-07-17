@@ -30,7 +30,6 @@ class AuthenticationController implements Controller {
       validationMiddleware(LoginDto),
       this.signIn
     )
-    this.router.post(`${this.path}/logout`, this.signOut)
   }
 
   private registration = async (
@@ -49,11 +48,8 @@ class AuthenticationController implements Controller {
     }
     const userData: CreateUserDto = body
     try {
-      const { cookie, user } = await this.AuthenticationService.register(
-        userData
-      )
-      response.setHeader('Set-Cookie', [cookie])
-      return response.send(user)
+      await this.AuthenticationService.register(userData)
+      return response.sendStatus(201)
     } catch (error) {
       return next(error)
     }
@@ -76,16 +72,11 @@ class AuthenticationController implements Controller {
     }
 
     const tokenData = this.AuthenticationService.createToken(user._id)
-    const cookie = this.AuthenticationService.createCookie(tokenData)
-    response.setHeader('Set-Cookie', [cookie])
+    response.setHeader('Authorization', 'Bearer ' + tokenData)
     return response.send(user)
   };
 
-  private signOut = (request: Request, response: Response): Response => {
-    // TODO: Add User stored token refreshing
-    response.setHeader('Set-Cookie', ['Authorization=;Max-age=0'])
-    return response.sendStatus(200)
-  };
+  // TODO: Add sign out. Have DB of no longer active tokens that still have some time to live. Query provided token against The Blacklist on every authorized request
 }
 
 export default AuthenticationController

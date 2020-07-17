@@ -7,25 +7,15 @@ import userModel from '../../models/user.model'
 import CreateUserDto from './user.dto'
 import UserWithThatEmailAlreadyExistsException from '../../exceptions/UserWithThatEmailExistsException'
 
-interface IRegisterData {
-  cookie: string
-  user: User
-}
-
 class AuthenticationService {
   public UserModel = userModel;
 
-  public async register (userData: CreateUserDto):Promise<IRegisterData> {
-    if (await this.UserModel.findOne({ email: userData.email })) {
+  public async register (userData: CreateUserDto):Promise<void> {
+    const userDoc = await this.UserModel.findOne({ email: userData.email })
+    if (userDoc) {
       throw new UserWithThatEmailAlreadyExistsException(userData.email)
     }
-    const user = await this.UserModel.create(userData)
-    const tokenData = this.createToken(user._id)
-    const cookie = this.createCookie(tokenData)
-    return {
-      cookie,
-      user
-    }
+    await this.UserModel.create(userData)
   }
 
   public createCookie (tokenData: TokenData): string {
@@ -34,7 +24,7 @@ class AuthenticationService {
 
   public createToken (id: string): TokenData {
     const expiresIn = 60 * 60
-    const secret = process.env.JWT_SECRET || 'hhhhhh'
+    const secret = process.env.JWT_SECRET || 'defaultsecret' // TODO: add exception for undefined process.env.JWT_SECRET
     const dataStoredInToken: DataStoredInToken = {
       _id: id
     }
