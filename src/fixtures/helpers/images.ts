@@ -35,7 +35,7 @@ const createFacilityImages = (
         min: 0,
         max: imagesListLastIndex
       });
-      const imageFilename = imageFileNamesList[imageIndex];
+      const imageFilename = imageFileNamesList[imageIndex] + '.jpg';
       const createdData = createFacilityImage(
         facilityId,
         user._id,

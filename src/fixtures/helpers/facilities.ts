@@ -10,7 +10,7 @@ const createFacility = (user: User, imageFilenamesList: string[]) => {
     owner: user._id,
     title: faker.company.companyName(),
     description: faker.lorem.paragraph(5),
-    promoImage: imageFilenamesList[faker.random.number({ min: 0, max: imagesListLastIndex })],
+    promoImage: imageFilenamesList[faker.random.number({ min: 0, max: imagesListLastIndex })] + '.jpg',
     reviewsNumber: 0
   };
 };
