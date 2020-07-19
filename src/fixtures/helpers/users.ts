@@ -2,11 +2,6 @@ import faker from 'faker';
 import { ObjectID } from 'mongodb';
 import bcrypt from 'bcrypt';
 
-const syncGetPassword = (plainPassword: string) => {
-  const salt = bcrypt.genSaltSync(10);
-  return bcrypt.hashSync(plainPassword, salt);
-};
-
 const createUser = () => {
   return {
     _id: new ObjectID(),
@@ -18,7 +13,7 @@ const createUser = () => {
     email: faker.internet.email(),
     firstName: faker.name.firstName(),
     lastName: faker.name.lastName(),
-    password: syncGetPassword('user'),
+    password: 'user',
     avatarImage: faker.image.avatar(),
     role: 'user'
   };

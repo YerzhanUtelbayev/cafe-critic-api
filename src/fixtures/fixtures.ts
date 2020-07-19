@@ -16,9 +16,9 @@ import reviewModel from '../models/review.model';
 import ReviewService from '../controllers/review/review.service';
 import Review from '../interfaces/review.interface';
 
-const USERS_NUMBER = 3;
+const USERS_NUMBER = 50;
 const FACILITY_IMAGES_MAX_NUMBER = 20;
-const FACILITY_REVIEWS_MAX_NUMBER = 5;
+const FACILITY_REVIEWS_MAX_NUMBER = 20;
 
 const reviewService = new ReviewService();
 

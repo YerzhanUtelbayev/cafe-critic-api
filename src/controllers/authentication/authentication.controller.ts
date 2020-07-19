@@ -72,8 +72,7 @@ class AuthenticationController implements Controller {
     }
 
     const tokenData = this.AuthenticationService.createToken(user._id)
-    response.setHeader('Authorization', 'Bearer ' + tokenData)
-    return response.send(user)
+    return response.send({ user, Authorization: 'Bearer ' + tokenData })
   };
 
   // TODO: Add sign out. Have DB of no longer active tokens that still have some time to live. Query provided token against The Blacklist on every authorized request
