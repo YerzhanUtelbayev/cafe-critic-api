@@ -16,7 +16,7 @@ class FacilityController implements Controller {
   public path = '/places';
   public router = Router();
   private FacilityModel = facilityModel;
-  private FacilityService = new FacilityService()
+  private FacilityService = new FacilityService();
 
   constructor () {
     this.initializeRoutes()
@@ -73,6 +73,8 @@ class FacilityController implements Controller {
     response: Response
   ): Promise<Response> => {
     const facilityDocs = await this.FacilityModel.find()
+      .sort({ 'ratings.overall': -1 })
+      .limit(12)
     return response.send(facilityDocs)
   };
 
