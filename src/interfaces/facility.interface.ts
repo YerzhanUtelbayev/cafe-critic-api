@@ -6,6 +6,7 @@ export default interface Facility {
   title: string;
   description: string;
   promoImage: string;
+  thumbnail: string;
   reviewsNumber?: number;
   ratings?: {
     overall: number,

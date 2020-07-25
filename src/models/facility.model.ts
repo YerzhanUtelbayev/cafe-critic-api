@@ -29,6 +29,10 @@ const FacilitySchema = new Schema({
     type: String,
     required: true
   },
+  thumbnail: {
+    type: String,
+    required: true
+  },
   reviewsNumber: { type: Number, default: 0 },
   ratings: RatingsSchema
 })
