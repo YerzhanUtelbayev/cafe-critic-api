@@ -4,6 +4,7 @@ import Controller from '../../interfaces/controller.interface'
 import Facility from '../../interfaces/facility.interface'
 import RequestWithUser from '../../interfaces/RequestWithUser.interface'
 import CreateFacilityDto from './facility.dto'
+import FacilityService from './facility.service'
 import facilityModel from '../../models/facility.model'
 import authMiddleware from '../../middleware/auth.middleware'
 import validationMiddleware from '../../middleware/validation.middleware'
@@ -15,6 +16,7 @@ class FacilityController implements Controller {
   public path = '/places';
   public router = Router();
   private FacilityModel = facilityModel;
+  private FacilityService = new FacilityService()
 
   constructor () {
     this.initializeRoutes()
@@ -48,13 +50,19 @@ class FacilityController implements Controller {
     response: Response,
     next: NextFunction
   ): Promise<Response | void> => {
-    const facilityData: CreateFacilityDto = request.body
-    if (!request.user) {
+    const { body, file, user } = request
+    const facilityData: CreateFacilityDto = body
+    if (!user) {
       return next(new AuthenticationTokenMissingException())
     }
+
+    const thumbnailName = this.FacilityService.saveThumbnail(file)
+
     const createdFacility = new this.FacilityModel({
       ...facilityData,
-      owner: request.user._id
+      promoImage: file.filename,
+      thumbnail: thumbnailName,
+      owner: user._id
     })
     await createdFacility.save()
     return response.sendStatus(201)
