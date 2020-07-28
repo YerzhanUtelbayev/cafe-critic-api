@@ -4,7 +4,7 @@ import Image from '../interfaces/image.interface'
 
 const { Schema } = mongoose
 
-const ImageSchema = new Schema({
+const imageSchema = new Schema({
   author: {
     type: Schema.Types.ObjectId,
     ref: 'User',
@@ -21,6 +21,6 @@ const ImageSchema = new Schema({
   }
 })
 
-const imageModel = mongoose.model<Image & mongoose.Document>('Image', ImageSchema)
+const imageModel = mongoose.model<Image & mongoose.Document>('Image', imageSchema)
 
 export default imageModel

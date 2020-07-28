@@ -12,7 +12,7 @@ import PlaceQueryMissingException from '../../exceptions/PlaceQueryMissingExcept
 import AuthenticationTokenMissingException from '../../exceptions/AuthenticationTokenMissingException'
 
 class ImageController implements Controller {
-  public path = '/places';
+  public path = '/images';
   public router = Router();
   private ImageModel = imageModel;
 
@@ -62,7 +62,7 @@ class ImageController implements Controller {
       return next(new PlaceQueryMissingException())
     }
     const facilityId = request.query.place
-    const imageDocs = this.ImageModel.find({ facility: facilityId })
+    const imageDocs = await this.ImageModel.find({ facility: facilityId })
 
     return response.send(imageDocs)
   };
