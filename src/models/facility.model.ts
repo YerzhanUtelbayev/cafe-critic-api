@@ -1,4 +1,5 @@
-import mongoose from 'mongoose'
+import mongoose, { Document, Model, FilterQuery } from 'mongoose'
+import mongoosePaginate from 'mongoose-paginate-v2'
 
 import Facility from '../interfaces/facility.interface'
 
@@ -37,7 +38,16 @@ const FacilitySchema = new Schema({
   ratings: RatingsSchema
 })
 
-const facilityModel = mongoose.model<Facility & mongoose.Document>(
+FacilitySchema.plugin(mongoosePaginate)
+
+type IFacilityDocument = Document
+
+interface IFacilityModel extends Model<IFacilityDocument> {
+  paginate(query?: FilterQuery<Facility>, options?: mongoose.PaginateOptions): Promise<mongoose.PaginateResult<Facility[]>>
+}
+// TODO: Check mongoose static methods typing.
+
+const facilityModel: IFacilityModel = mongoose.model<IFacilityDocument, IFacilityModel>(
   'Facility',
   FacilitySchema
 )

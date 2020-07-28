@@ -1,4 +1,5 @@
 import { Request, Response, Router, NextFunction } from 'express'
+import { isString } from 'class-validator'
 
 import Controller from '../../interfaces/controller.interface'
 import Facility from '../../interfaces/facility.interface'
@@ -72,9 +73,15 @@ class FacilityController implements Controller {
     request: Request,
     response: Response
   ): Promise<Response> => {
-    const facilityDocs = await this.FacilityModel.find()
-      .sort({ 'ratings.overall': -1 })
-      .limit(12)
+    const { page, limit } = request.query
+    const options = {
+      page: isString(page) ? parseInt(page, 10) : 1,
+      limit: isString(limit) ? parseInt(limit, 10) : 12,
+      sort: { 'ratings.overall': -1 },
+      lean: true
+    }
+
+    const facilityDocs = await this.FacilityModel.paginate({}, options)
     return response.send(facilityDocs)
   };
 
