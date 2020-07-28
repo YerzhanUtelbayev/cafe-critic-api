@@ -8,6 +8,7 @@ export default interface Facility {
   promoImage: string;
   thumbnail: string;
   reviewsNumber?: number;
+  imagesNumber?: number;
   ratings?: {
     overall: number,
     food: number,
