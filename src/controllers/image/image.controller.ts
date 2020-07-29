@@ -2,6 +2,7 @@ import { Router, Request, Response, NextFunction } from 'express'
 import { isString } from 'class-validator'
 
 import Controller from '../../interfaces/controller.interface'
+import ImageService from './image.service'
 import imageModel from '../../models/image.model'
 import RequestWithUser from '../../interfaces/RequestWithUser.interface'
 import CreateImageDto from './image.dto'
@@ -15,6 +16,7 @@ class ImageController implements Controller {
   public path = '/images';
   public router = Router();
   private ImageModel = imageModel;
+  private ImageService = new ImageService();
 
   constructor () {
     this.initializeRoutes()
@@ -42,6 +44,9 @@ class ImageController implements Controller {
     if (!request.user) {
       return next(new AuthenticationTokenMissingException())
     }
+
+    await this.ImageService.incrementFacilityImagesNumber(imageData.facility)
+
     const createdImage = new this.ImageModel({
       ...imageData,
       author: request.user._id
