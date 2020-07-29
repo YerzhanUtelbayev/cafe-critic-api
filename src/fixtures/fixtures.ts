@@ -14,6 +14,7 @@ import facilityModel from '../models/facility.model';
 import imageModel from '../models/image.model';
 import reviewModel from '../models/review.model';
 import ReviewService from '../controllers/review/review.service';
+import ImageService from '../controllers/image/image.service';
 import Review from '../interfaces/review.interface';
 
 const USERS_NUMBER = 50;
@@ -21,6 +22,7 @@ const FACILITY_IMAGES_MAX_NUMBER = 20;
 const FACILITY_REVIEWS_MAX_NUMBER = 20;
 
 const reviewService = new ReviewService();
+const imageService = new ImageService();
 
 const usersList = createUsersByNumber(USERS_NUMBER);
 const facilitiesList = createFacilities(usersList, imageFileNames.exterior);
@@ -86,6 +88,9 @@ mongoose
       await userModel.create(usersList);
       await facilityModel.create(facilitiesList);
       await imageModel.create(imagesList);
+      for (const image of imagesList) {
+        await imageService.incrementFacilityImagesNumber(image.facility)
+      }
       await Promise.all(
         reviewsList.map(async (review) => {
           const result = await reviewService.hasUpdatedFacilityRatingWithNew(

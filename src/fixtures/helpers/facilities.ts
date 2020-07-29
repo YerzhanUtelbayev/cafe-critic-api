@@ -14,7 +14,8 @@ const createFacility = (user: User, imageFilenamesList: string[]) => {
     description: faker.lorem.paragraph(5),
     promoImage: `${imageFileName}.jpg`,
     thumbnail: `thumbnail-${imageFileName}.webp`,
-    reviewsNumber: 0
+    reviewsNumber: 0,
+    imagesNumber: 0
   };
 };
 
